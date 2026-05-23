@@ -102,7 +102,7 @@ export {
   /** @deprecated Use classifyEmbeddedAgentRunResultForModelFallback. */
   classifyEmbeddedAgentRunResultForModelFallback as classifyEmbeddedPiRunResultForModelFallback,
 } from "../agents/embedded-agent-runner/result-fallback-classifier.js";
-export { resolveEmbeddedAgentRuntime } from "../agents/embedded-agent-runner/runtime.js";
+export { resolveEmbeddedAgentRuntime } from "../agents/deprecated-agent-runtime-compat.js";
 export { resolveUserPath } from "../utils.js";
 export { callGatewayTool } from "../agents/tools/gateway.js";
 export type { NodeListNode } from "../agents/tools/nodes-utils.js";

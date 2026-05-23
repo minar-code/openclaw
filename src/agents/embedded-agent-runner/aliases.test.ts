@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { normalizeEmbeddedAgentRuntime } from "../agent-runtime-id.js";
+import { normalizeDeprecatedAgentRuntimeId } from "../deprecated-agent-runtime-compat.js";
 import * as embeddedAgentRunner from "../embedded-agent-runner.js";
 import * as embeddedAgent from "../embedded-agent.js";
-import { normalizeEmbeddedAgentRuntime, normalizeLegacyAgentRuntimeId } from "./runtime.js";
 
 describe("embedded runner compatibility aliases", () => {
   it("keeps the embedded-agent barrel bound to the runner implementation", () => {
@@ -18,6 +19,6 @@ describe("embedded runner compatibility aliases", () => {
 
   it("keeps old Pi runtime compatibility explicit", () => {
     expect(normalizeEmbeddedAgentRuntime("pi")).toBe("pi");
-    expect(normalizeLegacyAgentRuntimeId("pi")).toBe("openclaw");
+    expect(normalizeDeprecatedAgentRuntimeId("pi")).toBe("openclaw");
   });
 });

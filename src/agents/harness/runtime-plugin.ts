@@ -5,10 +5,8 @@ import {
   resolveBundledProviderCompatPluginIds,
   resolveOwningPluginIdsForProvider,
 } from "../../plugins/providers.js";
-import {
-  isDefaultAgentRuntimeId,
-  normalizeOptionalLegacyAgentRuntimeId,
-} from "../embedded-agent-runner/runtime.js";
+import { isDefaultAgentRuntimeId } from "../agent-runtime-id.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "../deprecated-agent-runtime-compat.js";
 import { resolveAgentHarnessPolicy } from "./policy.js";
 
 function dedupePluginIds(values: readonly string[]): string[] {
@@ -101,7 +99,9 @@ export async function ensureSelectedAgentHarnessPlugin(params: {
   agentHarnessRuntimeOverride?: string;
   workspaceDir: string;
 }): Promise<void> {
-  const runtimeOverride = normalizeOptionalLegacyAgentRuntimeId(params.agentHarnessRuntimeOverride);
+  const runtimeOverride = normalizeOptionalDeprecatedAgentRuntimeId(
+    params.agentHarnessRuntimeOverride,
+  );
   const policy = resolveAgentHarnessPolicy({
     provider: params.provider,
     modelId: params.modelId,

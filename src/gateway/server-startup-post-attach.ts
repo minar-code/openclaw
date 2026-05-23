@@ -461,7 +461,7 @@ async function prewarmConfiguredPrimaryModel(params: {
     import("../agents/agent-scope.js"),
     import("../agents/defaults.js"),
     import("../agents/model-selection.js"),
-    import("../agents/embedded-agent-runner/runtime.js"),
+    import("../agents/deprecated-agent-runtime-compat.js"),
   ]);
   const { provider, model } = resolveConfiguredModelRef({
     cfg: params.cfg,

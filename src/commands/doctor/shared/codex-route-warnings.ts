@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { resolveConfiguredProviderFallback } from "../../../agents/configured-provider-fallback.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../../agents/defaults.js";
-import { normalizeOptionalLegacyAgentRuntimeId } from "../../../agents/embedded-agent-runner/runtime.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "../../../agents/deprecated-agent-runtime-compat.js";
 import { splitTrailingAuthProfile } from "../../../agents/model-ref-profile.js";
 import { normalizeConfiguredProviderCatalogModelId } from "../../../agents/model-ref-shared.js";
 import { resolveModelRuntimePolicy } from "../../../agents/model-runtime-policy.js";
@@ -70,7 +70,7 @@ function normalizeString(value: unknown): string | undefined {
 }
 
 function normalizeRuntimeString(value: unknown): string | undefined {
-  return normalizeOptionalLegacyAgentRuntimeId(value);
+  return normalizeOptionalDeprecatedAgentRuntimeId(value);
 }
 
 function asMutableRecord(value: unknown): MutableRecord | undefined {

@@ -192,7 +192,7 @@ vi.mock("../agents/model-selection.js", () => ({
   resolveHooksGmailModel: hoisted.resolveHooksGmailModel,
 }));
 
-vi.mock("../agents/embedded-agent-runner/runtime.js", () => ({
+vi.mock("../agents/deprecated-agent-runtime-compat.js", () => ({
   resolveEmbeddedAgentRuntime: hoisted.resolveEmbeddedAgentRuntime,
 }));
 

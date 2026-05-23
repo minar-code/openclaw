@@ -12,8 +12,8 @@ import {
   resolveDefaultAgentId,
 } from "../agents/agent-scope.js";
 import { appendCronStyleCurrentTimeLine } from "../agents/current-time.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "../agents/deprecated-agent-runtime-compat.js";
 import { resolveEmbeddedSessionLane } from "../agents/embedded-agent-runner/lanes.js";
-import { normalizeOptionalLegacyAgentRuntimeId } from "../agents/embedded-agent-runner/runtime.js";
 import { formatReasoningMessage } from "../agents/embedded-agent-utils.js";
 import { resolveAgentHarnessPolicy } from "../agents/harness/policy.js";
 import { resolveModelRefFromString, type ModelRef } from "../agents/model-selection.js";
@@ -447,7 +447,7 @@ function usesCodexHarness(params: {
     modelId: modelRef.model,
     agentId: params.agentId,
   });
-  const runtimeId = normalizeOptionalLegacyAgentRuntimeId(policy.runtime);
+  const runtimeId = normalizeOptionalDeprecatedAgentRuntimeId(policy.runtime);
   if (runtimeId === "codex") {
     return true;
   }

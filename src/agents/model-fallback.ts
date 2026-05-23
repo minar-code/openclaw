@@ -10,16 +10,14 @@ import { isCommandLaneTaskTimeoutError } from "../process/command-queue.js";
 import { createLazyImportLoader } from "../shared/lazy-promise.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 import { sanitizeForLog } from "../terminal/ansi.js";
+import { isDefaultAgentRuntimeId } from "./agent-runtime-id.js";
 import { externalCliDiscoveryForProviders } from "./auth-profiles/external-cli-discovery.js";
 import { hasAnyAuthProfileStoreSource } from "./auth-profiles/source-check.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "./defaults.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "./deprecated-agent-runtime-compat.js";
 import { isLikelyContextOverflowError } from "./embedded-agent-helpers/errors.js";
 import type { FailoverReason } from "./embedded-agent-helpers/types.js";
-import {
-  isDefaultAgentRuntimeId,
-  normalizeOptionalLegacyAgentRuntimeId,
-} from "./embedded-agent-runner/runtime.js";
 import {
   FailoverError,
   coerceToFailoverError,
@@ -365,7 +363,9 @@ async function assertModelFallbackCandidateHarnessAvailable(
   if (isCliProvider(params.provider, params.cfg)) {
     return;
   }
-  const agentRuntimeOverride = normalizeOptionalLegacyAgentRuntimeId(agentHarnessRuntimeOverride);
+  const agentRuntimeOverride = normalizeOptionalDeprecatedAgentRuntimeId(
+    agentHarnessRuntimeOverride,
+  );
   const harnessPolicy = resolveAgentHarnessPolicy({
     provider: params.provider,
     modelId: params.model,

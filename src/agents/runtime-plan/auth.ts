@@ -1,5 +1,5 @@
 import type { OpenClawConfig } from "../../config/types.openclaw.js";
-import { normalizeOptionalLegacyAgentRuntimeId } from "../embedded-agent-runner/runtime.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "../deprecated-agent-runtime-compat.js";
 import { shouldRouteOpenAIThroughCodexAuthProvider } from "../openai-codex-routing.js";
 import { resolveProviderIdForAuth } from "../provider-auth-aliases.js";
 import type { AgentRuntimeAuthPlan } from "./types.js";
@@ -11,8 +11,8 @@ function resolveHarnessAuthProvider(params: {
   harnessId?: string;
   harnessRuntime?: string;
 }): string | undefined {
-  const harnessId = normalizeOptionalLegacyAgentRuntimeId(params.harnessId);
-  const runtime = normalizeOptionalLegacyAgentRuntimeId(params.harnessRuntime);
+  const harnessId = normalizeOptionalDeprecatedAgentRuntimeId(params.harnessId);
+  const runtime = normalizeOptionalDeprecatedAgentRuntimeId(params.harnessRuntime);
   return harnessId === "codex" || runtime === "codex" ? CODEX_HARNESS_AUTH_PROVIDER : undefined;
 }
 

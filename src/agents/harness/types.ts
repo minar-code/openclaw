@@ -1,7 +1,7 @@
 export type AgentHarnessSupportContext = {
   provider: string;
   modelId?: string;
-  requestedRuntime: import("../embedded-agent-runner/runtime.js").EmbeddedAgentRuntime;
+  requestedRuntime: import("../agent-runtime-id.js").EmbeddedAgentRuntime;
 };
 
 export type AgentHarnessSupport =

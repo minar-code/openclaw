@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveEmbeddedAgentRuntime } from "../runtime.js";
+import { resolveEmbeddedAgentRuntime } from "../../deprecated-agent-runtime-compat.js";
 
 describe("resolveEmbeddedAgentRuntime", () => {
   it("uses OpenClaw mode by default", () => {

@@ -1,9 +1,7 @@
 import type { SessionEntry } from "../config/sessions.js";
 import { normalizeLowercaseStringOrEmpty } from "../shared/string-coerce.js";
-import {
-  isDefaultAgentRuntimeId,
-  normalizeOptionalLegacyAgentRuntimeId,
-} from "./embedded-agent-runner/runtime.js";
+import { isDefaultAgentRuntimeId } from "./agent-runtime-id.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "./deprecated-agent-runtime-compat.js";
 import { listLegacyRuntimeModelProviderAliases } from "./model-runtime-aliases.js";
 import { resolveContextConfigProviderForRuntime } from "./openai-codex-routing.js";
 
@@ -15,11 +13,11 @@ export type SessionRuntimeCompatEntry = Pick<
 export function resolvePersistedSessionRuntimeId(
   entry?: SessionRuntimeCompatEntry,
 ): string | undefined {
-  const runtimeOverride = normalizeOptionalLegacyAgentRuntimeId(entry?.agentRuntimeOverride);
+  const runtimeOverride = normalizeOptionalDeprecatedAgentRuntimeId(entry?.agentRuntimeOverride);
   if (runtimeOverride && !isDefaultAgentRuntimeId(runtimeOverride)) {
     return runtimeOverride;
   }
-  return normalizeOptionalLegacyAgentRuntimeId(entry?.agentHarnessId);
+  return normalizeOptionalDeprecatedAgentRuntimeId(entry?.agentHarnessId);
 }
 
 export function resolveSessionRuntimeOverrideForProvider(params: {
@@ -27,7 +25,7 @@ export function resolveSessionRuntimeOverrideForProvider(params: {
   entry?: Pick<SessionEntry, "agentRuntimeOverride">;
 }): string | undefined {
   const provider = normalizeLowercaseStringOrEmpty(params.provider);
-  const runtime = normalizeOptionalLegacyAgentRuntimeId(params.entry?.agentRuntimeOverride);
+  const runtime = normalizeOptionalDeprecatedAgentRuntimeId(params.entry?.agentRuntimeOverride);
   if (!runtime || isDefaultAgentRuntimeId(runtime)) {
     return undefined;
   }

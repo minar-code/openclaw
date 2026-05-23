@@ -6,10 +6,12 @@ import { resolveContextEngine as resolveContextEngineImpl } from "../../context-
 import type { ContextEngine } from "../../context-engine/types.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { createPreparedEmbeddedAgentSettingsManager as createPreparedEmbeddedAgentSettingsManagerImpl } from "../agent-project-settings.js";
+import { OPENCLAW_AGENT_RUNTIME_ID } from "../agent-runtime-id.js";
 import {
   applyAgentAutoCompactionGuard as applyAgentAutoCompactionGuardImpl,
   resolveEffectiveCompactionMode,
 } from "../agent-settings.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "../deprecated-agent-runtime-compat.js";
 import { buildEmbeddedCompactionRuntimeContext } from "../embedded-agent-runner/compaction-runtime-context.js";
 import {
   compactContextEngineWithSafetyTimeout,
@@ -18,10 +20,6 @@ import {
 } from "../embedded-agent-runner/compaction-safety-timeout.js";
 import { runContextEngineMaintenance as runContextEngineMaintenanceImpl } from "../embedded-agent-runner/context-engine-maintenance.js";
 import { shouldPreemptivelyCompactBeforePrompt as shouldPreemptivelyCompactBeforePromptImpl } from "../embedded-agent-runner/run/preemptive-compaction.js";
-import {
-  OPENCLAW_AGENT_RUNTIME_ID,
-  normalizeOptionalLegacyAgentRuntimeId,
-} from "../embedded-agent-runner/runtime.js";
 import { resolveLiveToolResultMaxChars as resolveLiveToolResultMaxCharsImpl } from "../embedded-agent-runner/tool-result-truncation.js";
 import type { EmbeddedAgentCompactResult } from "../embedded-agent-runner/types.js";
 import { ensureSelectedAgentHarnessPlugin as ensureSelectedAgentHarnessPluginImpl } from "../harness/runtime-plugin.js";
@@ -160,7 +158,7 @@ function isNativeHarnessCompactionSession(
   const harnessId = sessionEntry?.agentHarnessId?.trim().toLowerCase();
   if (
     !harnessId ||
-    normalizeOptionalLegacyAgentRuntimeId(harnessId) === OPENCLAW_AGENT_RUNTIME_ID
+    normalizeOptionalDeprecatedAgentRuntimeId(harnessId) === OPENCLAW_AGENT_RUNTIME_ID
   ) {
     return false;
   }

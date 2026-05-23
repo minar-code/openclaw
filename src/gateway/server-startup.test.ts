@@ -29,7 +29,7 @@ vi.mock("../agents/embedded-agent-runner/model.js", () => {
   };
 });
 
-vi.mock("../agents/embedded-agent-runner/runtime.js", () => ({
+vi.mock("../agents/deprecated-agent-runtime-compat.js", () => ({
   resolveEmbeddedAgentRuntime: () => resolveEmbeddedAgentRuntimeMock(),
 }));
 

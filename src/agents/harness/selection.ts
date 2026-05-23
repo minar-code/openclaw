@@ -1,21 +1,19 @@
 import type { OpenClawConfig } from "../../config/types.openclaw.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
+import { isDefaultAgentRuntimeId } from "../agent-runtime-id.js";
 import {
   resolveEffectiveToolPolicy,
   resolveGroupToolPolicy,
   resolveInheritedToolPolicyForSession,
   resolveSubagentToolPolicyForSession,
 } from "../agent-tools.policy.js";
+import { normalizeOptionalDeprecatedAgentRuntimeId } from "../deprecated-agent-runtime-compat.js";
 import type { CompactEmbeddedAgentSessionParams } from "../embedded-agent-runner/compact.types.js";
 import type {
   EmbeddedRunAttemptParams,
   EmbeddedRunAttemptResult,
 } from "../embedded-agent-runner/run/types.js";
-import {
-  isDefaultAgentRuntimeId,
-  normalizeOptionalLegacyAgentRuntimeId,
-} from "../embedded-agent-runner/runtime.js";
 import type { EmbeddedAgentCompactResult } from "../embedded-agent-runner/types.js";
 import { resolveSandboxRuntimeStatus } from "../sandbox/runtime-status.js";
 import { resolveSenderToolPolicy } from "../sender-tool-policy.js";
@@ -132,7 +130,9 @@ function selectAgentHarnessDecision(params: {
   agentHarnessRuntimeOverride?: string;
 }): AgentHarnessSelectionDecision {
   const resolvedPolicy = resolveConfiguredAgentHarnessPolicy(params);
-  const runtimeOverride = normalizeOptionalLegacyAgentRuntimeId(params.agentHarnessRuntimeOverride);
+  const runtimeOverride = normalizeOptionalDeprecatedAgentRuntimeId(
+    params.agentHarnessRuntimeOverride,
+  );
   const policy =
     runtimeOverride && !isDefaultAgentRuntimeId(runtimeOverride)
       ? ({
