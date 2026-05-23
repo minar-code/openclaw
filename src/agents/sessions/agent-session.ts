@@ -995,7 +995,7 @@ export class AgentSession {
 
     try {
       // Handle extension commands first (execute immediately, even during streaming)
-      // Extension commands manage their own LLM interaction via pi.sendMessage()
+      // Extension commands manage their own LLM interaction via the session API.
       if (expandPromptTemplates && text.startsWith("/")) {
         const handled = await this.tryExecuteExtensionCommand(text);
         if (handled) {

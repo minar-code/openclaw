@@ -71,7 +71,7 @@ async function generateHtml(sessionData: SessionData): Promise<string> {
     loadTemplate(path.join("vendor", "highlight.min.js")),
   ]);
 
-  // Use pi-mono dark theme colors (matching their theme/dark.json)
+  // Use the bundled dark session-export palette.
   const themeVars = `
     --cyan: #00d7ff;
     --blue: #5f87ff;

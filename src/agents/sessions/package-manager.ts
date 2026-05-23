@@ -30,32 +30,7 @@ export interface ResolvedPaths {
   themes: ResolvedResource[];
 }
 
-export type MissingSourceAction = "install" | "skip" | "error";
-
-/** @deprecated Package installation now belongs to the OpenClaw plugin manager. */
-export interface ProgressEvent {
-  type: "start" | "progress" | "complete" | "error";
-  action: "install" | "remove" | "update" | "clone" | "pull";
-  source: string;
-  message?: string;
-}
-
-export type ProgressCallback = (event: ProgressEvent) => void;
-
-/** @deprecated Package update checks now belong to the OpenClaw plugin manager. */
-export interface PackageUpdate {
-  source: string;
-  displayName: string;
-  type: "npm" | "git";
-  scope: Exclude<SourceScope, "temporary">;
-}
-
-export interface ConfiguredPackage {
-  source: string;
-  scope: "user" | "project";
-  filtered: boolean;
-  installedPath?: string;
-}
+export type MissingSourceAction = "skip" | "error";
 
 export interface PackageManager {
   resolve(onMissing?: (source: string) => Promise<MissingSourceAction>): Promise<ResolvedPaths>;
@@ -892,20 +867,14 @@ export class DefaultPackageManager implements PackageManager {
         continue;
       }
 
-      const handleMissing = async (): Promise<boolean> => {
+      const handleMissing = async (): Promise<void> => {
         if (!onMissing) {
-          return false;
+          return;
         }
         const action = await onMissing(sourceStr);
-        if (action === "skip") {
-          return false;
-        }
         if (action === "error") {
           throw new Error(`Missing source: ${sourceStr}`);
         }
-        throw new Error(
-          `Missing source: ${sourceStr}. Package installation now belongs to the OpenClaw plugin manager.`,
-        );
       };
 
       if (parsed.type === "npm") {
@@ -1077,7 +1046,7 @@ export class DefaultPackageManager implements PackageManager {
     return { name, version };
   }
 
-  private getManagedNpmInstallPath(source: NpmSource, scope: SourceScope): string {
+  private getNpmInstallPath(source: NpmSource, scope: SourceScope): string {
     if (scope === "temporary") {
       return join(this.getTemporaryDir("npm"), "node_modules", source.name);
     }
@@ -1085,10 +1054,6 @@ export class DefaultPackageManager implements PackageManager {
       return join(this.cwd, CONFIG_DIR_NAME, "npm", "node_modules", source.name);
     }
     return join(this.agentDir, "npm", "node_modules", source.name);
-  }
-
-  private getNpmInstallPath(source: NpmSource, scope: SourceScope): string {
-    return this.getManagedNpmInstallPath(source, scope);
   }
 
   private getGitInstallPath(source: GitSource, scope: SourceScope): string {
