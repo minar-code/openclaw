@@ -80,9 +80,8 @@ export const BUILD_ALL_STEPS = [
         "scripts/copy-export-html-templates.ts",
         "scripts/lib/copy-assets.ts",
         "src/auto-reply/reply/export-html",
-        "src/agents/sessions/export-html",
       ],
-      outputs: ["dist/export-html", "dist/agents/sessions/export-html"],
+      outputs: ["dist/auto-reply/reply/export-html"],
     },
   },
   {

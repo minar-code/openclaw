@@ -419,36 +419,6 @@ export function getThemesDir(): string {
   return join(getPackageSourceOrDistDir(), "agents", "modes", "interactive", "theme");
 }
 
-/**
- * Get path to HTML export template directory (shipped with package)
- * - For Bun binary: export-html/ next to executable
- * - For Node.js (dist/): dist/agents/sessions/export-html/
- * - For tsx (src/): src/agents/sessions/export-html/
- */
-export function getExportTemplateDir(): string {
-  if (isBunBinary) {
-    return join(getPackageDir(), "export-html");
-  }
-  return join(getPackageSourceOrDistDir(), "agents", "sessions", "export-html");
-}
-
-/**
- * Get path to shared HTML export vendor assets.
- * - For Bun binary: export-html/vendor/ next to executable
- * - For Node.js (dist/): dist/export-html/vendor/
- * - For tsx (src/): src/auto-reply/reply/export-html/vendor/
- */
-export function getExportVendorDir(): string {
-  if (isBunBinary) {
-    return join(getPackageDir(), "export-html", "vendor");
-  }
-  const packageDir = getPackageDir();
-  if (existsSync(join(packageDir, "src"))) {
-    return join(packageDir, "src", "auto-reply", "reply", "export-html", "vendor");
-  }
-  return join(packageDir, "dist", "export-html", "vendor");
-}
-
 /** Get path to package.json */
 export function getPackageJsonPath(): string {
   return join(getPackageDir(), "package.json");

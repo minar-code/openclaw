@@ -31,7 +31,6 @@ import {
   resetApiProviders,
   streamSimple,
 } from "openclaw/plugin-sdk/llm";
-import { theme } from "../modes/interactive/theme/theme.js";
 import type {
   Agent,
   AgentEvent,
@@ -55,8 +54,6 @@ import {
   shouldCompact,
 } from "./compaction/index.js";
 import { DEFAULT_THINKING_LEVEL } from "./defaults.js";
-import { exportSessionToHtml, type ToolHtmlRenderer } from "./export-html/index.js";
-import { createToolHtmlRenderer } from "./export-html/tool-renderer.js";
 import {
   type ContextUsage,
   type ExtensionCommandContextActions,
@@ -3108,25 +3105,14 @@ export class AgentSession {
   }
 
   /**
-   * Export session to HTML.
+   * @deprecated Use the OpenClaw session export command instead.
    * @param outputPath Optional output path (defaults to session directory)
    * @returns Path to exported file
    */
-  async exportToHtml(outputPath?: string): Promise<string> {
-    const themeName = this.settingsManager.getTheme();
-
-    // Create tool renderer if we have an extension runner (for custom tool HTML rendering)
-    const toolRenderer: ToolHtmlRenderer = createToolHtmlRenderer({
-      getToolDefinition: (name) => this.getToolDefinition(name),
-      theme,
-      cwd: this.sessionManager.getCwd(),
-    });
-
-    return await exportSessionToHtml(this.sessionManager, this.state, {
-      outputPath,
-      themeName,
-      toolRenderer,
-    });
+  async exportToHtml(_outputPath?: string): Promise<string> {
+    throw new Error(
+      "AgentSession.exportToHtml is deprecated; use the OpenClaw session export command.",
+    );
   }
 
   /**

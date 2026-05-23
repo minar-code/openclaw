@@ -9,63 +9,51 @@ import { ensureDirectory, logVerboseCopy, resolveBuildCopyContext } from "./lib/
 
 const context = resolveBuildCopyContext(import.meta.url);
 
-const sessionTemplateSrcDir = path.join(
-  context.projectRoot,
-  "src",
-  "agents",
-  "sessions",
-  "export-html",
-);
-const sessionTemplateDistDir = path.join(
-  context.projectRoot,
-  "dist",
-  "agents",
-  "sessions",
-  "export-html",
-);
-const sharedVendorSrcDir = path.join(
+const exportHtmlSrcDir = path.join(
   context.projectRoot,
   "src",
   "auto-reply",
   "reply",
   "export-html",
-  "vendor",
 );
-const sharedVendorDistDir = path.join(context.projectRoot, "dist", "export-html", "vendor");
+const exportHtmlDistDir = path.join(
+  context.projectRoot,
+  "dist",
+  "auto-reply",
+  "reply",
+  "export-html",
+);
 
 function copyExportHtmlTemplates() {
-  if (!fs.existsSync(sessionTemplateSrcDir)) {
-    console.warn(`${context.prefix} Source directory not found:`, sessionTemplateSrcDir);
+  if (!fs.existsSync(exportHtmlSrcDir)) {
+    console.warn(`${context.prefix} Source directory not found:`, exportHtmlSrcDir);
     return;
   }
 
-  ensureDirectory(sessionTemplateDistDir);
-
-  const templateFiles = ["template.html", "template.css", "template.js"];
+  fs.rmSync(exportHtmlDistDir, { recursive: true, force: true });
+  ensureDirectory(exportHtmlDistDir);
   let copiedCount = 0;
-  for (const file of templateFiles) {
-    const srcFile = path.join(sessionTemplateSrcDir, file);
-    const distFile = path.join(sessionTemplateDistDir, file);
-    if (fs.existsSync(srcFile)) {
+
+  const copyDir = (srcDir: string, distDir: string, relativePrefix = "") => {
+    ensureDirectory(distDir);
+    for (const file of fs.readdirSync(srcDir)) {
+      const srcFile = path.join(srcDir, file);
+      const distFile = path.join(distDir, file);
+      const relativeName = path.join(relativePrefix, file);
+      if (file.endsWith(".test.ts")) {
+        continue;
+      }
+      if (fs.statSync(srcFile).isDirectory()) {
+        copyDir(srcFile, distFile, relativeName);
+        continue;
+      }
       fs.copyFileSync(srcFile, distFile);
       copiedCount += 1;
-      logVerboseCopy(context, `Copied ${file}`);
+      logVerboseCopy(context, `Copied ${relativeName}`);
     }
-  }
+  };
 
-  if (fs.existsSync(sharedVendorSrcDir)) {
-    ensureDirectory(sharedVendorDistDir);
-    const vendorFiles = fs.readdirSync(sharedVendorSrcDir);
-    for (const file of vendorFiles) {
-      const srcFile = path.join(sharedVendorSrcDir, file);
-      const distFile = path.join(sharedVendorDistDir, file);
-      if (fs.statSync(srcFile).isFile()) {
-        fs.copyFileSync(srcFile, distFile);
-        copiedCount += 1;
-        logVerboseCopy(context, `Copied vendor/${file}`);
-      }
-    }
-  }
+  copyDir(exportHtmlSrcDir, exportHtmlDistDir);
 
   console.log(`${context.prefix} Copied ${copiedCount} export-html assets.`);
 }

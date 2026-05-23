@@ -6,7 +6,7 @@ import {
   type FileEntry as SessionFileEntry,
   type SessionEntry as AgentSessionEntry,
   type SessionHeader,
-} from "../../agents/sessions/index.js";
+} from "../../agents/sessions/session-manager.js";
 import { pathExists } from "../../infra/fs-safe.js";
 import type { ReplyPayload } from "../types.js";
 import {

@@ -87,4 +87,33 @@ describe("DefaultPackageManager", () => {
       false,
     );
   });
+
+  it("does not auto-install missing npm package resources", async () => {
+    const root = await makeTempDir("openclaw-package-manager-");
+    const manager = new DefaultPackageManager({
+      cwd: root,
+      agentDir: join(root, "agent"),
+      settingsManager: SettingsManager.inMemory({ packages: ["npm:@openclaw/missing-test"] }),
+    });
+
+    const resolved = await manager.resolve();
+
+    expect(resolved.extensions).toEqual([]);
+    expect(resolved.skills).toEqual([]);
+    expect(resolved.prompts).toEqual([]);
+    expect(resolved.themes).toEqual([]);
+  });
+
+  it("rejects legacy install actions for missing package resources", async () => {
+    const root = await makeTempDir("openclaw-package-manager-");
+    const manager = new DefaultPackageManager({
+      cwd: root,
+      agentDir: join(root, "agent"),
+      settingsManager: SettingsManager.inMemory({ packages: ["npm:@openclaw/missing-test"] }),
+    });
+
+    await expect(manager.resolve(async () => "install")).rejects.toThrow(
+      "Package installation now belongs to the OpenClaw plugin manager",
+    );
+  });
 });
